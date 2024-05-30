@@ -13,8 +13,6 @@ Before that, I briefly worked as a Blockchain software developer.
 
 My interests outside of work include systematic trading. I will be sharing my journey in systematic trading on this blog.
 
-I also workout a lot ([Functionalpatterns Training](https://functionalpatterns.com).
-
 ### Contact me
 Whether you are a recruiter or have a question / request, you are welcome to reach out.
 
