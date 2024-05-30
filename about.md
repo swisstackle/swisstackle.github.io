@@ -4,12 +4,19 @@ title: About
 permalink: /about/
 ---
 
-Some information about you!
+I am a software developer and former Division 1 student athlete living in Buffalo, NY. 
+Originally I am from switzerland and grew up there, but left the country to play american football on a scholarship in the U.S when I was 19.
 
-### More Information
+I currently work for PCA Technology group where I do full stack development (.NET) and
+lead a project in FPGA, Microcontroller and Low Latency Real Time programming (yes, web dev and hardware design / programming is an odd combination, but I like challenges).
+Before that, I briefly worked as a Blockchain software developer.
 
-A place to include any other types of information that you'd like to include about yourself.
+My interests outside of work include systematic trading. I will be sharing my journey in systematic trading on this blog.
+
+I also workout a lot ([Functionalpatterns Training](https://functionalpatterns.com).
 
 ### Contact me
+Whether you are a recruiter or have a question / request, you are welcome to reach out.
 
-[email@domain.com](mailto:email@domain.com)
+[alain.schaerer@gmail.com](mailto:alain.schaerer@gmail.com)
+([LinkedIn](https://www.linkedin.com/in/alainschaerer/).
