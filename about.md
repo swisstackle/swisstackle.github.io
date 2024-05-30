@@ -5,10 +5,11 @@ permalink: /about/
 ---
 
 I am a software developer and former Division 1 student athlete living in Buffalo, NY. 
-Originally I am from switzerland and grew up there, but left the country to play american football on a scholarship in the U.S when I was 19.
+Originally I am from Switzerland, but left the country to play american football on a scholarship in the U.S when I was 19.
 
 I currently work for PCA Technology group where I do full stack development (.NET) and
-lead a project in FPGA, Microcontroller and Low Latency Real Time programming (yes, web dev and hardware design / programming is an odd combination, but I like challenges).
+lead a project in FPGA, Microcontroller and Low Latency Real Time programming.
+Yes, web dev and hardware design / programming is an odd combination, but I like challenges.
 Before that, I briefly worked as a Blockchain software developer.
 
 My interests outside of work include systematic trading. I will be sharing my journey in systematic trading on this blog.
