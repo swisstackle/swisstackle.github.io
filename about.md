@@ -18,4 +18,5 @@ My interests outside of work include systematic trading. I will be sharing my jo
 Whether you are a recruiter or have a question / request, you are welcome to reach out.
 
 [alain.schaerer@gmail.com](mailto:alain.schaerer@gmail.com)
-([LinkedIn](https://www.linkedin.com/in/alainschaerer/).
+
+[LinkedIn](https://www.linkedin.com/in/alainschaerer/).
