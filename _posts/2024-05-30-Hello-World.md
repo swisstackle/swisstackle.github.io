@@ -1,0 +1,36 @@
+---
+layout: post
+title: Trading Evolved: Systematic Momentum Strategy in Quantconnect: Part 1
+---
+
+In an effort to learn systematic trading, I am currently reading "Trading Evolved" by Andreas Clenow.
+In Chapter 12, he talks about an equity strategy using momentum.
+
+The rules are the following:
+* Trading is done only monthly.
+* Only stocks in the S&p 500 will be considered.
+* Momentum slope will be calculated using 125 days.
+* Top 30 stocks will be considered.
+* Weights will be calculated for those 30 stocks using inverse volatility.
+* Volatility is calculated using 20 day standard deviation.
+* Trendfilter calculated based on 200 day average of the S&P 500 index.
+* If the trendfilter is positive, we are allowed to buy.
+* Minimum required momentum value is set to 40.
+* Foreach of the 30 selected stocks if the momentum value is above 40, we buy it. If not, we leave the calculated money in cash.
+* We sell stocks if they fallbelow the minimum required momentum value, or if they leave the index.
+* Each month we rebalance and repeat.
+
+Sounds promosing, right? Right?? Well, we'll see.
+
+The first thing the chapter talks about is the investment universe, which is the S&P 500, duuh.
+But we will have to make sure that we actually trade the stocks that were in the index at the time that the backtest is trading (aka avoiding survivorship bias).
+If we would just trade the companies that are currently in the S&P 500, we are biased towards companies that are successful TODAY.
+Nvidia was added to the S&P 500 in 2001 ([source](https://www.theregister.com/2001/11/30/nvidia_joinss_p/)), but if we would be trading it before that, we would make unrealistic profit.
+
+So how do we do that? Unfortunately, compact data on which companies were member of the S&P 500 at whatever time is sparse. But I found some!
+Checkout [this](https://github.com/fja05680/sp500) Github repo where [fja05680](https://github.com/fja05680) was nice enough to prepare it for us and constantly keeps it updated.
+
+## Quantconnect
+Andreas Clenow (the author of the book) uses [Zipline](https://github.com/stefan-jansen/zipline-reloaded) and Python to implement the strategy. However, as a C# Developer, I want to use Quantconnect because you can use it with C# (and python as well). Plus, Quantconnect has good and built in data and can be used in the cloud which means no setup hassle.
+
+## Preprocessing the data
