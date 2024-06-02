@@ -2,7 +2,7 @@
 layout: post
 title: Trading Evolved: Systematic Momentum Strategy in Quantconnect: Part 1
 ---
-![_config.yml]({{ site.baseurl }}/images/config.png)
+
 In an effort to learn systematic trading, I am currently reading "Trading Evolved" by Andreas Clenow.
 In Chapter 12, he talks about an equity strategy using momentum.
 
