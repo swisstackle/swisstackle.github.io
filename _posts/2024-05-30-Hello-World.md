@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Trading &#58; Evolved Systematic Momentum Strategy in Quantconnect &#58; Part 1
+title: Trading&#58; Evolved Systematic Momentum Strategy in Quantconnect&#58; Part 1
 ---
 
 In an effort to learn systematic trading, I am currently reading "Trading Evolved" by Andreas Clenow.
