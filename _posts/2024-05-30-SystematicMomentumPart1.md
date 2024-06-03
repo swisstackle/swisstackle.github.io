@@ -118,4 +118,5 @@ The `window` parameter is populated by the main algorithm and includes all the d
 ```
 To meausure momentum, Andreas recommends using the exponential regression and then normalizing it for outliers by multiplying the annualized slope with the R-Squared value of the regression line.
 To calculate the slope, we use the Math.NET library. The example of fitting the line to the window values and calculating the R-Squared value comes straight from [here](https://numerics.mathdotnet.com/Regression).
-At the end we annualize the slope with `var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`, muultiply annualized slope with the R-Squared value and that really is it.
+
+At the end we annualize the slope with `var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`, multiply annualized slope with the R-Squared value and that really is it.
