@@ -40,3 +40,39 @@ The first time I tried implementing this strategy, the backtest simply took too 
 Quantconnect does not have a premade "momentum score indicator" or a "volatility standard deviation indicator" that we can just use to preprocess the data, so we have to make it ourselves. Don't get me wrong, QC does have premade indicators, but just not these specific ones.
 
 ## Momentum Score Indicator
+Pre Requirements: Basic C# knowledge. Free Tier Quantconnect account and have your project created. This code has only been tested in the cloud.
+For the code, I won't include the using statements because it's a lot of them, but just most of them should already be added from the cloud environment.
+
+Let's start..
+
+The momentum score indicator will be a window indicator because it calculates the momentum score of a certain time window. Therefore, our class skeleton will look like this:
+```cs
+    public class ExponentialRegressionIndicator : WindowIndicator<IndicatorDataPoint>
+    {
+    }
+```
+Next, I am adding the constructor, which is rather simple here
+
+```cs
+    public class ExponentialRegressionIndicator : WindowIndicator<IndicatorDataPoint>
+    {
+        public double RecentScore { get; set; }
+        private Action<string> LogFunc;
+        public ExponentialRegressionIndicator(string name, int period, Action<string> logFunc)
+            : base(name, period)
+        {
+            RecentScore = 0;
+            this.LogFunc = logFunc;
+        }
+    }
+```
+The `LogFunc` is just so we can pass the `Debug` function from the main algorithm to this class. The `Debug` function just prints to the debug screen in Quantconnect.
+
+`RecentScore` is the most recent score that we will use in the preprocessing.
+
+`base(name, preriod)` will pass the selected window period to the parent class which is `WindowIndicator`.
+### ComputeNextValue
+
+Every (window) indicator has to implement the decimal `ComputeNextValue(IReadOnlyWindow<IndicatorDataPoint> window, IndicatorDataPoint input)` function.
+During every trading iteration, that function is automatically called and has to return the next value (in this case momentum score).
+The `window` 
