@@ -34,3 +34,9 @@ Checkout [this](https://github.com/fja05680/sp500) Github repo where [fja05680](
 Andreas Clenow (the author of the book) uses [Zipline](https://github.com/stefan-jansen/zipline-reloaded) and Python to implement the strategy. However, as a C# Developer, I want to use Quantconnect because you can use it with C# (and python as well). Plus, Quantconnect has good and built in data and can be used in the cloud which means no setup hassle.
 
 ## Preprocessing the data
+The first time I tried implementing this strategy, the backtest simply took too long because the Lean Engine (Quantconnect's backtest engine) had to create a universe of +/- 500 instruments every time rebalancing. I then decided to preprocess the data in fja05680's csv file and only include the top 30 symbols for each row / date, as well as their momentum score and volatility standard deviation.
+
+## Not so fast...
+Quantconnect does not have a premade "momentum score indicator" or a "volatility standard deviation indicator" that we can just use to preprocess the data, so we have to make it ourselves. Don't get me wrong, QC does have premade indicators, but just not these specific ones.
+
+## Momentum Score Indicator
