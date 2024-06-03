@@ -73,6 +73,6 @@ The `LogFunc` is just so we can pass the `Debug` function from the main algorith
 `base(name, preriod)` will pass the selected window period to the parent class which is `WindowIndicator`.
 ### ComputeNextValue
 
-Every (window) indicator has to implement the decimal `ComputeNextValue(IReadOnlyWindow<IndicatorDataPoint> window, IndicatorDataPoint input)` function.
+Every (window) indicator has to implement the `decimal ComputeNextValue(IReadOnlyWindow<IndicatorDataPoint> window, IndicatorDataPoint input)` function.
 During every trading iteration, that function is automatically called and has to return the next value (in this case momentum score).
 The `window` 
