@@ -75,4 +75,47 @@ The `LogFunc` is just so we can pass the `Debug` function from the main algorith
 
 Every (window) indicator has to implement the `decimal ComputeNextValue(IReadOnlyWindow<IndicatorDataPoint> window, IndicatorDataPoint input)` function.
 During every trading iteration, that function is automatically called and has to return the next value (in this case momentum score).
-The `window` 
+The `window` parameter is populated by the main algorithm and includes all the data points (bar close prices etc.) of the window.
+
+```cs
+
+        protected override decimal ComputeNextValue(IReadOnlyWindow<IndicatorDataPoint> window, IndicatorDataPoint input)
+        {
+                double score = 0;
+                if (window.Count < window.Size)
+                {
+                    return 0;
+                }
+                // Coming straight from https://numerics.mathdotnet.com/Regression
+                double[] xdata = new double[window.Count];
+                for (int i = 0; i < window.Count; i++)
+                {
+                    xdata[i] = i;
+                }
+                double[] ydata = new double[window.Count];
+                for (int i = 0; i < window.Count; i++)
+                {
+                    ydata[i] = Math.Log((double)window[i].Value);
+                }
+                ydata = ydata.Reverse().ToArray(); // Because for some reason the window reverses itself.
+                var regressionData = Fit.Line(xdata, ydata);
+                double intercept = regressionData.Item1;
+                double slope = regressionData.Item2;
+                var rSquared = GoodnessOfFit.RSquared(xdata.Select(x => intercept + slope * x), ydata);
+                var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;
+                score = annualizedSlope * rSquared;
+                RecentScore = score;
+            try
+            {
+                return (decimal)score;
+            }
+            catch (OverflowException)
+            {
+                this.logFunc($"OverflowException when casting score to decimal: {score} on {input.Symbol} : {input.EndTime}");
+                return 0m;
+            }
+        }
+```
+To meausure momentum, Andreas recommends using the exponential regression and then normalizing it for outliers by multiplying the annualized slope with the R-Squared value of the regression line.
+To calculate the slope, we use the Math.NET library. The example of fitting the line to the window values and calculating the R-Squared value comes straight from [here](https://numerics.mathdotnet.com/Regression).
+At the end we annualize the slope with `var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`, muultiply annualized slope with the R-Squared value and that really is it.
