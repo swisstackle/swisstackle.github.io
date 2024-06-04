@@ -120,3 +120,41 @@ To meausure momentum, Andreas recommends using the exponential regression and th
 To calculate the slope, we use the Math.NET library. The example of fitting the line to the window values and calculating the R-Squared value comes straight from [here](https://numerics.mathdotnet.com/Regression).
 
 At the end we annualize the slope with `var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`, multiply annualized slope with the R-Squared value and that really is it.
+
+wrong, QC does have premade indicators, but just not these specific ones.
+
+## Risk Management (Stdv of closing prices)
+
+If possible, we want to assign the same risk to each of the 30 opened positions each time we rebalance. To meausure risk, we use volatility. The more volatile a price curve is, the less we buy of said stock so that we assign the same risk to each stock.
+
+```cs
+    public class StandardDeviationIndicator : IndicatorBase<IndicatorDataPoint>
+    {
+        private readonly RateOfChange Roc;
+        private readonly StandardDeviation Std;
+
+        public StandardDeviationIndicator(string name, int period)
+            : base(name)
+        {
+            Roc = new RateOfChange(name + "_ROC", period);
+            Std = new StandardDeviation(name + "_STD", period);
+        }
+
+        protected override decimal ComputeNextValue(IndicatorDataPoint input)
+        {
+            Roc.Update(input);
+            if (Roc.IsReady)
+            {
+                Std.Update(input.Time, Roc.Current.Value);
+            }
+            return Std.Current.Value;
+        }
+
+        public override bool IsReady => Std.IsReady;
+    }
+```
+
+However, we do not want to calculate the standard deviation of the absolute prices, because that wouldn't be normalized. Therefore, we will calculate the standard deviation of the percentage returns.
+Quantconnect already has an indicator for both standard deviation and for percentage changes (rate of change), so all we have to do is use those 2 indicators and combine them.
+
+
