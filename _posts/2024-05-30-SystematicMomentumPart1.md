@@ -252,9 +252,6 @@ Then we check if the momentum score ends up being more than 40, and if yes, we a
 Then, if the count of the `value` list is atleast 30, we add it to the dictionary <date, symbols>
 
 
-
-`var history = qb.History(symbol, startDate, date, Resolution.Daily);` will get us all the historical data from -125 days to the current date.
-
 Last but not least, we save the new dictionary to the object store with `qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);`.
 
 That's all the preprocessing. In the next part, we will discuss how we can use the preprocessed data to create our main algorithm that we can use for our backtest or even live trading in Quantconnect.
