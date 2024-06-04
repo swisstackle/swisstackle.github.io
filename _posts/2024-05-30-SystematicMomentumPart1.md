@@ -116,12 +116,12 @@ The `window` parameter is populated by the main algorithm and includes all the d
             }
         }
 ```
-To meausure momentum, Andreas recommends using the exponential regression and then normalizing it for outliers by multiplying the annualized slope with the R-Squared value of the regression line.
+To meausure momentum, Andreas recommends using the exponential regression and then normalizing it for outliers by multiplying the d slope with the R-Squared value of the regression line.
 To calculate the slope, we use the Math.NET library. The example of fitting the line to the window values and calculating the R-Squared value comes straight from [here](https://numerics.mathdotnet.com/Regression).
 
-At the end we annualize the slope with `var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`, multiply annualized slope with the R-Squared value and that really is it.
-
-wrong, QC does have premade indicators, but just not these specific ones.
+At the end we annualize the slope with
+`var annualizedSlope = (Math.Pow(Math.Exp(slope), 252) - 1) * 100;`
+and multiply the annualized slope with the R-Squared value and that really is it.
 
 ## Risk Management (Stdv of closing prices)
 
@@ -188,7 +188,7 @@ I will again ommit the imports, as well as the code for the indicators above. Th
             }
 ```
 
-First, we just create a dictionary with all the data from the csv file with the dates being the keys. This should be farily self explanatory.
+this will just create a dictionary with all the data from the csv file with the dates being the keys. This should be farily self explanatory.
 
 ```cs
 Dictionary<string, List<(string, double, decimal)>> symbolsMoreThanForty = new Dictionary<string, List<(string, double, decimal)>>();
@@ -238,12 +238,13 @@ foreach(var member in members)
 }
 qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);
 ```
+This is where we filter out all the symbols that have enough momentum.
 
 This line might need some explanation: `if(member.Key != members.Last().Key && date >= new DateTime(1998, 1, 1).AddDays(186))`
 
 186 real days is approximately 125 trading days, which is how many data points we need to calculate the momentum score, so we do not start calculating it until we reach +186 days in our csv file.
 
-We iterate through each entry in the csv file, get the historical data of 125 days for each of the symbols in the row entry, then iterate through all the 125 bars of that symbol, update the indicators manually each time.
+Then, we iterate through each entry in the csv file, get the historical data of 125 days for each of the symbols in the row entry, then iterate through all the 125 bars of that symbol, update the indicators manually each time.
 
 Then we check if the momentum score ends up being more than 40, and if yes, we add the symbol to the list `value`.
 
