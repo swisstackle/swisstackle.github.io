@@ -254,5 +254,5 @@ Then, if the count of the `value` list is atleast 30, we add it to the dictionar
 
 Last but not least, we save the new dictionary to the object store with `qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);`.
 
-That's all the preprocessing. In the next part, we will discuss how we can use the preprocessed data to create our main algorithm that we can use for our backtest or even live trading in Quantconnect.
+That's all the preprocessing. In the next part, we will discuss how we can use the preprocessed data to create our main algorithm that we can use for our backtest.
 
