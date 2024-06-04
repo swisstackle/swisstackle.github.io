@@ -157,4 +157,103 @@ If possible, we want to assign the same risk to each of the 30 opened positions 
 However, we do not want to calculate the standard deviation of the absolute prices, because that wouldn't be normalized. Therefore, we will calculate the standard deviation of the percentage returns.
 Quantconnect already has an indicator for both standard deviation and for percentage changes (rate of change), so all we have to do is use those 2 indicators and combine them.
 
+## Preprocessing by using the indicators
+
+The goal here is to generate a json file with each entry being the date, the momentum score and the standard deviation.
+In Quantconnect, there is something called the "ObjectStore" which let's you store arbitary data on the cloud and then you can easily reuse it whenever.
+First, you will have to store [fja05690's csv file](https://github.com/fja05680/sp500/blob/master/S%26P%20500%20Historical%20Components%20%26%20Changes(04-08-2024).csv) in the object store.
+
+Let's get started with the code which will be inside a research notebook (I will use C#. Yes, Jupyter can execute C# if you use a C# kernel instead of a Python kernel).
+I will again ommit the imports, as well as the code for the indicators above. The code for the indicators will have to be inside the Jupyter notebook as well.
+
+```cs
+            var qb = new QuantBook();
+            var data = qb.ObjectStore.ReadString("sphistorical.csv");
+            var lines = data.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+            var members = new Dictionary<string, List<string>>();
+            foreach (var line in lines)
+            {
+                var trimmedLine = line.Replace("\"", "").Replace("\\", "");
+                var parts = trimmedLine.Split(',');
+                var date = parts[0];
+                var tickers = new List<string>();
+                for (var i = 1; i < parts.Length - 1; i++)
+                {
+                    tickers.Add(parts[i]);
+                }
+                if (!members.Keys.Contains(date))
+                {
+                    members.Add(date, tickers);
+                }
+            }
+```
+
+First, we just create a dictionary with all the data from the csv file with the dates being the keys. This should be farily self explanatory.
+
+```cs
+Dictionary<string, List<(string, double, decimal)>> symbolsMoreThanForty = new Dictionary<string, List<(string, double, decimal)>>();
+var count = members.Count();
+var counter = 0;
+Dictionary<DateTime, (Symbol, double)> errors = new Dictionary<DateTime, (Symbol, double)>();
+
+var i = 0;
+foreach(var member in members)
+{
+    if(member.Key != String.Empty){ 
+    var date = DateTime.Parse(member.Key);
+    if(member.Key != members.Last().Key && date >= new DateTime(1998, 1, 1).AddDays(186)){
+        
+        var value = new List<(string, double, decimal)>();
+        foreach(var symbolString in member.Value){
+                var symbol = qb.AddEquity(symbolString, Resolution.Daily).Symbol;
+                var startDate = date.AddDays(-185);
+                var history = qb.History(symbol, startDate, date, Resolution.Daily);
+                
+                var eriInd = new ExponentialRegressionIndicator("eri", 125, Console.WriteLine);
+                var stdInd = new StandardDeviationIndicator("std", 20);
+            // Iterate over the historical data and update your indicator
+                if(history.Count() > 0 && history.Last().Close > 0 && history.Last().Volume > 0)
+                {
+                    foreach (var bar in history)
+                    {
+                        eriInd.Update(bar.EndTime, bar.Close);
+                        stdInd.Update(bar.EndTime, bar.Close);
+                    }
+                    if(eriInd.RecentScore > 40){
+                        value.Add((symbolString, eriInd.RecentScore, stdInd.Current.Value));
+                        foreach (var error in eriInd.Errors){
+                            errors.Add(error.Key, error.Value);
+                        }
+                    }
+                }
+            }
+        value = value.OrderBy(x => x.Item3).ThenByDescending(x => x.Item2).ToList();
+        if(value.Count() > 30){
+            symbolsMoreThanForty.Add(member.Key, value);
+            Console.WriteLine($"{counter} / {count} | Length {symbolsMoreThanForty[member.Key].Count}");
+        }
+        counter++;
+        }
+    }
+}
+qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);
+```
+
+This line might need some explanation: `if(member.Key != members.Last().Key && date >= new DateTime(1998, 1, 1).AddDays(186))`
+
+186 real days is approximately 125 trading days, which is how many data points we need to calculate the momentum score, so we do not start calculating it until we reach +186 days in our csv file.
+
+We iterate through each entry in the csv file, get the historical data of 125 days for each of the symbols in the row entry, then iterate through all the 125 bars of that symbol, update the indicators manually each time.
+
+Then we check if the momentum score ends up being more than 40, and if yes, we add the symbol to the list `value`.
+
+`value = value.OrderBy(x => x.Item3).ThenByDescending(x => x.Item2).ToList();` orders the list by ascending standard deviation first and then by descending momentum score.
+
+Then, if the count of the `value` list is atleast 30, we add it to the dictionary <date, symbols>
+
+
+
+`var history = qb.History(symbol, startDate, date, Resolution.Daily);` will get us all the historical data from -125 days to the current date.
+
+Last but not least, we save the new dictionary to the object store with `qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);`.
 
