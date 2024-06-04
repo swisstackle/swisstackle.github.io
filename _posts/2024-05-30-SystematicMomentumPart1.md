@@ -51,7 +51,7 @@ The momentum score indicator will be a window indicator because it calculates th
     {
     }
 ```
-Next, I am adding the constructor, which is rather simple here
+Next, I am adding the constructor.
 
 ```cs
     public class ExponentialRegressionIndicator : WindowIndicator<IndicatorDataPoint>
