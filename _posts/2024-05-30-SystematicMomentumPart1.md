@@ -244,14 +244,13 @@ This line might need some explanation: `if(member.Key != members.Last().Key && d
 
 186 real days is approximately 125 trading days, which is how many data points we need to calculate the momentum score, so we do not start calculating it until we reach +186 days in our csv file.
 
-Then, we iterate through each entry in the csv file, get the historical data of 125 days for each of the symbols in the row entry, then iterate through all the 125 bars of that symbol, update the indicators manually each time.
+Then, we iterate through each entry in the csv file, get the historical data of 125 days for each of the symbols in the row entry, then iterate through all the 125 bars of that symbol and update the indicators manually each time.
 
-Then we check if the momentum score ends up being more than 40, and if yes, we add the symbol to the list `value`.
+Then, we check if the momentum score ends up being more than 40, and if yes, we add the symbol to the list `value`.
 
 `value = value.OrderBy(x => x.Item3).ThenByDescending(x => x.Item2).ToList();` orders the list by ascending standard deviation first and then by descending momentum score.
 
-Then, if the count of the `value` list is atleast 30, we add it to the dictionary <date, symbols>
-
+If the length of the `value` list is atleast 30, we add it to the dictionary <date, symbols>
 
 Last but not least, we save the new dictionary to the object store with `qb.ObjectStore.SaveJson<Dictionary<string, List<(string, double, decimal)>>>("MoreThan40_2.json", symbolsMoreThanForty);`.
 
