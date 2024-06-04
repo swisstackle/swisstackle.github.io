@@ -41,7 +41,7 @@ Quantconnect does not have a premade "momentum score indicator" or a "volatility
 
 ## Momentum Score Indicator
 Pre Requirements: Basic C# knowledge. Free Tier Quantconnect account and have your project created. This code has only been tested in the cloud.
-For the code, I won't include the using statements because it's a lot of them, but just most of them should already be added from the cloud environment.
+For the code, I won't include the using statements because it's a lot of them, but most of them should already be added from the cloud environment.
 
 Let's start..
 
