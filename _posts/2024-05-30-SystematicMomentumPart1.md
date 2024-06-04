@@ -8,7 +8,7 @@ In Chapter 12, he talks about an equity strategy using momentum.
 
 The rules are the following:
 * Trading is done only monthly.
-* Only stocks in the S&p 500 will be considered.
+* Only stocks in the S&P 500 will be considered.
 * Momentum slope will be calculated using 125 days.
 * Top 30 stocks will be considered.
 * Weights will be calculated for those 30 stocks using inverse volatility.
